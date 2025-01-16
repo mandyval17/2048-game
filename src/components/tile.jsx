@@ -21,7 +21,6 @@ const getTileStyle = (value) => {
     justifyContent: "center",
     alignItems: "center",
     height: "110px",
-    width: "120px",
     fontSize: "50px",
     fontWeight: "bold",
     color: value > 4 ? "#f9f6f2" : "#776e65",
@@ -31,6 +30,7 @@ const getTileStyle = (value) => {
     boxShadow: value
       ? "0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.06)"
       : "none",
+
   };
 };
 

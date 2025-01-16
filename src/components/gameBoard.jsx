@@ -15,6 +15,7 @@ const GameBoard = ({ setScore, setBestScore, resetGame, setResetGame }) => {
   const [board, setBoard] = useState(createEmptyBoard());
   const scoreRef = useRef(0);
   const bestScoreRef = useRef(0);
+  const [touchStart, setTouchStart] = useState(null);
 
   const addRandomTile = (board) => {
     const emptyTiles = [];
@@ -32,6 +33,7 @@ const GameBoard = ({ setScore, setBestScore, resetGame, setResetGame }) => {
 
     return newBoard;
   };
+
   const moveTiles = (direction) => {
     console.log(board);
     let newBoard = [...board];
@@ -175,12 +177,47 @@ const GameBoard = ({ setScore, setBestScore, resetGame, setResetGame }) => {
     }
   };
 
+  const handleTouchStart = (event) => {
+    const touch = event.touches[0];
+    setTouchStart({ x: touch.clientX, y: touch.clientY });
+  };
+
+  const handleTouchEnd = (event) => {
+    if (!touchStart) return;
+    const touch = event.changedTouches[0];
+    const dx = touch.clientX - touchStart.x;
+    const dy = touch.clientY - touchStart.y;
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+      if (dx > 0) {
+        moveTiles("right");
+      } else {
+        moveTiles("left");
+      }
+    } else {
+      if (dy > 0) {
+        moveTiles("down");
+      } else {
+        moveTiles("up");
+      }
+    }
+
+    setTouchStart(null);
+  };
+
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
+
+    const boardElement = document.getElementById("game-board");
+    boardElement.addEventListener("touchstart", handleTouchStart);
+    boardElement.addEventListener("touchend", handleTouchEnd);
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+      boardElement.removeEventListener("touchstart", handleTouchStart);
+      boardElement.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [gameOver, resetGame]);
+  }, [gameOver, resetGame, touchStart]);
 
   useEffect(() => {
     if (resetGame) {
@@ -195,6 +232,7 @@ const GameBoard = ({ setScore, setBestScore, resetGame, setResetGame }) => {
 
   return (
     <Box
+      id="game-board"
       display="grid"
       gridTemplateColumns="repeat(4, 1fr)"
       gap={1}

@@ -20,7 +20,6 @@ function App() {
         justifyContent="center"
         minHeight="97vh"
         bgcolor="#faf8ef"
-        // padding="16px"
       >
         <Header score={score} bestScore={bestScore} onRestart={handleRestart} />
         <Container maxWidth="sm">
